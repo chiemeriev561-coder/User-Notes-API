@@ -37,7 +37,7 @@ Language: (Python / JavaScript)
 
 ⚙️ Setup & Installation
 1️⃣ Clone the repository
-git clone https://github.com/your-username/user-notes-api.git
+git clone https://github.com/chiemeriev561-coder/User-Notes-API
 cd user-notes-api
 
 2️⃣ Install dependencies
