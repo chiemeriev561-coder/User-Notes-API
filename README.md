@@ -99,6 +99,4 @@ This project is open-source and available under the MIT License.
 
 
 
-FastAPI, Flask, or Express?
-
-I’ll customize this README exactly to your codebase so it looks pro-level on GitHub 🔥
+FastAPI
