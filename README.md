@@ -1,68 +1,73 @@
 📝 User Notes API
 
 A RESTful API for creating, managing, and organizing user notes.
-This project uses SQLite for lightweight and local data storage, making it easy to set up and run.
+This project uses PostgreSQL for robust and scalable data storage.
 
 🚀 Features
 
 Create, read, update, and delete notes (CRUD)
 
-SQLite database for simple local development
+PostgreSQL database for production-ready performance
 
 Clean and structured API design
 
-Easy to extend with PostgreSQL in the future
+Environment-based configuration for flexible deployment
 
 🛠 Tech Stack
 
-Backend: (add your framework here – e.g. FastAPI / Express / Flask)
+Backend: FastAPI
 
-Database: SQLite
+Database: PostgreSQL
 
-Language: (Python / JavaScript)
+Language: Python
 
 📂 Project Structure
 .
-├── app/                # Application source code
-├── database/           # SQLite database and config
-├── routes/             # API routes
-├── models/             # Database models
-├── .env.example        # Environment variables example
+├── app/                    # Application source code
+│   ├── api/               # API routes
+│   ├── db/                # Database configuration
+│   ├── models/            # Database models
+│   ├── schemas/           # Pydantic schemas
+│   └── services/          # Business logic
+├── .env.example           # Environment variables example
 ├── .gitignore
 ├── README.md
-└── main.py / index.js  # App entry point
-
-
-(Adjust this to match your actual folder structure)
+├── requirements.txt       # Python dependencies
+└── main.py                # App entry point
 
 ⚙️ Setup & Installation
-1️⃣ Clone the repository
+
+1️⃣ Prerequisites
+- PostgreSQL installed and running
+- Python 3.8+
+
+2️⃣ Clone the repository
 git clone https://github.com/chiemeriev561-coder/User-Notes-API
 cd user-notes-api
 
-2️⃣ Install dependencies
-Python
+3️⃣ Create a PostgreSQL database
+psql -U postgres
+CREATE DATABASE notes_db;
+
+4️⃣ Install dependencies
 pip install -r requirements.txt
 
+5️⃣ Environment Variables
 
-3️⃣ Environment Variables
+Copy `.env.example` to `.env` and configure:
+cp .env.example .env
 
-Create a .env file:
+Edit `.env` with your PostgreSQL credentials:
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=notes_db
 
-DATABASE_URL=sqlite:///notes.db
+6️⃣ Run the server
+python -m uvicorn app.main:app --reload
 
-4️⃣ Run the server
-Python
-python main.py
-
-
-
-Server will start at:
-
-http://localhost:8000
-
-
-(or http://localhost:3000 for Node)
+Server will start at: http://localhost:8000
 
 📌 API Endpoints (Example)
 Method	Endpoint	Description
@@ -73,20 +78,27 @@ PUT	/notes/{id}	Update a note
 DELETE	/notes/{id}	Delete a note
 🗄 Database
 
-This project uses SQLite, which stores data in a local file.
-It’s ideal for development and small projects and can be upgraded to PostgreSQL later.
+This project uses PostgreSQL, which provides:
+- ACID compliance for data integrity
+- Advanced querying and indexing
+- Perfect for production environments
+- Support for complex data relationships
 
 📈 Future Improvements
 
 User authentication (JWT)
 
-PostgreSQL support for production
+Full-text search capabilities
 
-Pagination & search
+Pagination & sorting
 
 Rate limiting
 
-Deployment (Railway / Render / Fly.io)
+Tags and categories for notes
+
+Deployment containerization (Docker)
+
+Automated testing and CI/CD
 
 🤝 Contributing
 
