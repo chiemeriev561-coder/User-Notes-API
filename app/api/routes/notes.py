@@ -1,7 +1,9 @@
 from typing import List
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 import logging
+from sqlalchemy.orm import Session
+from app.db.session import get_db
 from app.schemas.note import NoteCreate, NoteResponse
 from app.services.notes_service import (
     create_note,
@@ -9,6 +11,8 @@ from app.services.notes_service import (
     get_notes,
     delete_note
 )
+from app.services.auth_service import get_current_user
+from app.models.user import User
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -17,10 +21,14 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/notes", tags=["Notes"])
 
 @router.post("/", response_model=NoteResponse, status_code=status.HTTP_201_CREATED)
-def create(note: NoteCreate):
+def create(
+    note: NoteCreate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     try:
         logger.info(f"Creating note with title: {note.title}")
-        result = create_note(note)
+        result = create_note(db, note, current_user.id)
         logger.info(f"Successfully created note: {result}")
         return result
     except Exception as e:
@@ -28,10 +36,13 @@ def create(note: NoteCreate):
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @router.get("/", response_model=list[NoteResponse])
-def list_notes():
+def list_notes(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     try:
-        logger.info("Fetching all notes")
-        result = get_all_notes()
+        logger.info("Fetching all notes for user")
+        result = get_all_notes(db, current_user.id)
         logger.info(f"Successfully fetched {len(result)} notes")
         return result
     except Exception as e:
@@ -39,10 +50,14 @@ def list_notes():
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @router.get("/{note_id}", response_model=NoteResponse)
-def read(note_id: int):
+def read(
+    note_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     try:
         logger.info(f"Fetching note with id: {note_id}")
-        note = get_notes(note_id)
+        note = get_notes(db, note_id, current_user.id)
         if not note:
             logger.warning(f"Note with id {note_id} not found")
             raise HTTPException(status_code=404, detail="Note not found")
@@ -55,10 +70,14 @@ def read(note_id: int):
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @router.delete("/{note_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete(note_id: int):
+def delete(
+    note_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     try:
         logger.info(f"Deleting note with id: {note_id}")
-        if not delete_note(note_id):
+        if not delete_note(db, note_id, current_user.id):
             logger.warning(f"Note with id {note_id} not found for deletion")
             raise HTTPException(status_code=404, detail="Note not found")
         logger.info(f"Successfully deleted note with id: {note_id}")
