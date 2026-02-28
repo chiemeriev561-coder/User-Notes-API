@@ -112,3 +112,13 @@ This project is open-source and available under the MIT License.
 
 
 FastAPI
+
+Database migrations (Alembic)
+- Install/update dependencies:
+  `pip install -r requirements.txt`
+- Existing database with already-created tables (first time only):
+  `python -m alembic stamp head`
+- Apply migrations on new changes:
+  `python -m alembic upgrade head`
+- Create a new migration after model changes:
+  `python -m alembic revision --autogenerate -m "describe change"`
