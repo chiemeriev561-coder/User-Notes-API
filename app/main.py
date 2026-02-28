@@ -15,7 +15,7 @@ def on_startup():
 
 @app.get("/")
 def root():
-    return {"status": "ok"}
+    return {"status": "sucess"}
 
 # Include routers
 app.include_router(auth_router)
